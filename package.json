@@ -1,7 +1,7 @@
 {
   "name": "fn-spy",
   "version": "0.0.0",
-  "description": "a simple way to create spies for your functions",
+  "description": "creating spies for your functions",
   "main": "index.js",
   "files": [
     "LICENSE",
@@ -11,7 +11,7 @@
   "scripts": {
     "coverage": "open coverage/lcov-report/index.html",
     "coverage:check": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
-    "test": "standard --fix && istanbul cover tape test.js"
+    "test": "standard --fix && istanbul cover -x test.js tape test.js"
   },
   "repository": {
     "type": "git",
