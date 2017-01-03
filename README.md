@@ -14,7 +14,9 @@ creating spies for your functions
 `const spy = require('fn-spy')`
 
 **spy.calledCount()** integer, returns the number of times a function as called
+
 **spy.calledWith()** array, returns the arguments passed to the function
+
 **spy.restore()** function, restores the function to the initial state
 
 
