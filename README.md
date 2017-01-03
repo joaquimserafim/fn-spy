@@ -11,12 +11,35 @@ creating spies for your functions
 
 
 ### api
+`const spy = require('fn-spy')`
+
+**spy.calledCount()** integer, returns the number of times a function as called
+**spy.calledWith()** array, returns the arguments passed to the function
+**spy.restore()** function, restores the function to the initial state
 
 
 ### example
 
 ```js
+const spy = require('fn-spy')
 
+function foo (...args) {
+  return args.length
+}
+
+let spiedFn = spy(foo)
+
+// calledCount
+spiedFn()
+spiedFn()
+spiedFn.calledCount()// will return 2
+
+// calledWith
+spiedFn(1, 2, 3)
+spiedFn.calledWith()// will return [[1, 2, 3]]
+
+// restore
+spiedFn = spiedFn.restore()// now spiedFn is retored to the initial state
 ```
 
 

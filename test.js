@@ -45,11 +45,23 @@ test('spy.calledWith', (assert) => {
 test('spy.restore', (assert) => {
   let s = fnSpy(foo)
 
+  assert.notDeepEqual(s, foo, 'functions should not match ')
+
+  s = s.restore()
+
   assert.deepEqual(
-    s.restore(),
+    s,
     foo,
     'calling `restore` should return the initial version of the function'
   )
+
+  assert.end()
+})
+
+test('spied function should be executed', (assert) => {
+  let s = fnSpy(foo)
+
+  assert.deepEqual(s(1, 2, 3), 3, 'should return 3')
 
   assert.end()
 })

@@ -1,6 +1,6 @@
 {
   "name": "fn-spy",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "creating spies for your functions",
   "main": "index.js",
   "files": [
@@ -20,7 +20,9 @@
   "keywords": [
     "utils",
     "function",
-    "spy"
+    "spy",
+    "testing",
+    "unit"
   ],
   "author": "@JoaquimSerafim",
   "license": "ISC",
