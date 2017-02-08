@@ -7,50 +7,51 @@ max-len: ["error", 80]
 'use strict'
 
 const test  = require('tape')
+const EE    = require('events')
 
-const fnSpy = require('./')
+const fnSpy = require('.')
 
 test('spy.calledCount', (assert) => {
-  let s = fnSpy(foo)
+  const spy = fnSpy(foo)
 
-  assert.deepEqual(s.calledCount(), 0, '0 calls 0 counts')
+  assert.deepEqual(spy.calledCount(), 0, '0 calls 0 counts')
 
-  s()
-  assert.deepEqual(s.calledCount(), 1, '1 call 1 count')
+  spy()
+  assert.deepEqual(spy.calledCount(), 1, '1 call 1 count')
 
-  s()
-  assert.deepEqual(s.calledCount(), 2, '2 calls 2 counts')
+  spy()
+  assert.deepEqual(spy.calledCount(), 2, '2 calls 2 counts')
 
   assert.end()
 })
 
 test('spy.calledWith', (assert) => {
-  let s = fnSpy(foo)
+  const spy = fnSpy(foo)
 
-  assert.deepEqual(s.calledWith(), [], 'empty array at the beginning')
+  assert.deepEqual(spy.calledWith(), [], 'empty array at the beginning')
 
-  s()
-  assert.deepEqual(s.calledWith(), [], 'no args empty array')
+  spy()
+  assert.deepEqual(spy.calledWith(), [[]], 'no args empty array')
 
-  s(1)
+  spy(1)
   assert.deepEqual(
-    s.calledWith(),
-    [[1]],
-    '`s(1)` passed should return the arg inside of an array[[1]]'
+    spy.calledWith(),
+    [[], [1]],
+    '`calledWith` should return [[], [1]]'
   )
 
   assert.end()
 })
 
 test('spy.restore', (assert) => {
-  let s = fnSpy(foo)
+  let spy = fnSpy(foo)
 
-  assert.notDeepEqual(s, foo, 'functions should not match ')
+  assert.notDeepEqual(spy, foo, 'functions should not match ')
 
-  s = s.restore()
+  spy = spy.restore()
 
   assert.deepEqual(
-    s,
+    spy,
     foo,
     'calling `restore` should return the initial version of the function'
   )
@@ -59,9 +60,67 @@ test('spy.restore', (assert) => {
 })
 
 test('spied function should be executed', (assert) => {
-  let s = fnSpy(foo)
+  const spy = fnSpy(foo)
 
-  assert.deepEqual(s(1, 2, 3), 3, 'should return 3')
+  assert.deepEqual(spy(1, 2, 3), 3, 'should return 3')
+
+  assert.end()
+})
+
+test('spy an emitter function', (assert) => {
+  const myEmitter = new EE()
+  const spy = fnSpy.emitter()
+
+  myEmitter.on('hey', spy)
+
+  assert.deepEqual(spy.calledCount(), 0, '0 calls 0 counts')
+  assert.deepEqual(spy.calledWith(), [], 'no arguments passed')
+
+  myEmitter.emit('hey', 1)
+  myEmitter.emit('hey', 2)
+
+  assert.deepEqual(spy.calledCount(), 2, '2 calls 2 counts')
+  assert.deepEqual(
+    spy.calledWith(),
+    [[1], [2]],
+    'should return the arguments passed to emitter function'
+  )
+
+  assert.end()
+})
+
+test('spy a callback function', (assert) => {
+  const spy = fnSpy.callback()
+
+  function someAsyncFn (cb) {
+    cb()
+  }
+
+  assert.deepEqual(spy.calledCount(), 0, '0 calls 0 counts')
+  assert.deepEqual(spy.calledWith(), [], 'no arguments passed')
+
+  someAsyncFn(spy)
+
+  assert.deepEqual(spy.calledCount(), 1, '1 calls 1 counts')
+  assert.deepEqual(spy.calledWith(), [[]], 'no arguments passed')
+
+  assert.end()
+})
+
+test('spy a callback function and arguments', (assert) => {
+  const spy = fnSpy.callback()
+
+  function someAsyncFn (a, b, cb) {
+    cb(a, b)
+  }
+
+  assert.deepEqual(spy.calledCount(), 0, '0 calls 0 counts')
+  assert.deepEqual(spy.calledWith(), [], 'no arguments passed')
+
+  someAsyncFn(1, 2, spy)
+
+  assert.deepEqual(spy.calledCount(), 1, '1 calls 1 counts')
+  assert.deepEqual(spy.calledWith(), [[1, 2]], 'no arguments passed')
 
   assert.end()
 })

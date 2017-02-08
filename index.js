@@ -6,15 +6,15 @@ max-len: ["error", 80]
 */
 'use strict'
 
-module.exports = spy
+const spy = module.exports = spyFn
 
-function spy (fn) {
+function spyFn (fn) {
   let count = 0
   let args  = []
 
-  function call (...theArgs) {
+  const call = function call (...theArgs) {
     count++
-    theArgs.length && args.push(theArgs)
+    args.push(theArgs)
     return fn.apply(null, theArgs)
   }
 
@@ -24,3 +24,12 @@ function spy (fn) {
 
   return call
 }
+
+spy.emitter = spyCallbacks
+spy.callback = spyCallbacks
+
+function spyCallbacks () {
+  return spyFn(replicant)
+}
+
+function replicant () {}

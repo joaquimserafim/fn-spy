@@ -1,6 +1,6 @@
 {
   "name": "fn-spy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "creating spies for your functions",
   "main": "index.js",
   "files": [
@@ -20,6 +20,8 @@
   "keywords": [
     "utils",
     "function",
+    "emitter",
+    "callback",
     "spy",
     "testing",
     "unit"
@@ -31,7 +33,7 @@
   },
   "homepage": "https://github.com/joaquimserafim/fn-spy#readme",
   "devDependencies": {
-    "istanbul": "^0.4.5",
+    "istanbul": "0.4.5",
     "pre-commit": "^1.2.2",
     "standard": "^8.6.0",
     "tape": "^4.6.3"
