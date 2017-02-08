@@ -19,9 +19,16 @@ creating spies for your functions
 
 **spy.restore()** function, restores the function to the initial state
 
+##### spy an emitter function
+`const spyMyEmitter = spy.emitter()` and will return the same methods as above
 
-### example
+##### spy a callback function
+`const spyMyEmitter = spy.callback()` and will return the same methods as above
 
+
+### examples
+
+generic example
 ```js
 const spy = require('fn-spy')
 
@@ -44,5 +51,36 @@ spiedFn.calledWith()// will return [[1, 2, 3]]
 spiedFn = spiedFn.restore()// now spiedFn is retored to the initial state
 ```
 
+emitter example
+```js
+const EE = require('events')
+const spy = require('fn-spy')
+
+const myEmitter = new EE()
+const spyEmitter = spy.emitter()
+
+myEmitter.on('hey', spyEmitter)
+
+myEmitter.emit('hey')
+
+spyEmitter.calledCount()// will return 1
+spyEmitter.calledWith()// will return [[]]
+```
+
+callback example
+```js
+const spy = require('fn-spy')
+
+const spyCallback = spy.callback()
+
+ function someFunction (cb) {
+    cb()
+  }
+
+someFunction(spyCallback)
+
+spyCallback.calledCount()// will return 1
+spyCallback.calledWith()// will return [[]]
+```
 
 #### ISC License (ISC)
