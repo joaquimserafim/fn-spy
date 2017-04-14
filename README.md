@@ -13,9 +13,18 @@ creating spies for your functions
 ### api
 `const spy = require('fn-spy')`
 
+`spy(function[, thisArg])`
+
+**function** the function to be spied
+**thisArg** the this argument for the call (to be used with Classes or Objects)
+
+##### methods
+
 **spy.calledCount()** integer, returns the number of times a function as called
 
 **spy.calledWith()** array, returns the arguments passed to the function
+
+**spy.getReturns()** array, returns the output of the executed functions
 
 **spy.restore()** function, restores the function to the initial state
 
@@ -83,4 +92,24 @@ spyCallback.calledCount()// will return 1
 spyCallback.calledWith()// will return [[]]
 ```
 
+Class / Object example
+```js
+function BladeRunner () {
+  this.sn = '9-9-0-6-9-4-7-X-B-7-1'
+}
+
+BladeRunner.prototype.getReplicant = function getReplicant () {
+  return this.sn
+}
+
+const deckard = new BladeRunner()
+const spy = fnSpy(deckard.getReplicant, deckard)
+
+spy()// returns '9-9-0-6-9-4-7-X-B-7-1'
+
+spy.calledCount()// will return 1
+spy.calledWith()// will return [[]]
+spy.getReturns()// will return ['9-9-0-6-9-4-7-X-B-7-1']
+
+```
 #### ISC License (ISC)

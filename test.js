@@ -59,13 +59,25 @@ test('spy.restore', (assert) => {
   assert.end()
 })
 
-test('spied function should be executed', (assert) => {
+test('spy.getReturns', (assert) => {
   const spy = fnSpy(foo)
 
-  assert.deepEqual(spy(1, 2, 3), 3, 'should return 3')
+  spy(1, 2, 3)
+
+  assert.deepEqual(spy.getReturns(), [3], 'should return [ 3 ]')
 
   assert.end()
 })
+
+test('spied function should be executed and should return an output',
+  (assert) => {
+    const spy = fnSpy(foo)
+
+    assert.deepEqual(spy(1, 2, 3), 3, 'should return 3')
+
+    assert.end()
+  }
+)
 
 test('spy an emitter function', (assert) => {
   const myEmitter = new EE()
@@ -121,6 +133,40 @@ test('spy a callback function and arguments', (assert) => {
 
   assert.deepEqual(spy.calledCount(), 1, '1 calls 1 counts')
   assert.deepEqual(spy.calledWith(), [[1, 2]], 'no arguments passed')
+
+  assert.end()
+})
+
+test('spy an object and return the fn output', (assert) => {
+
+  function BladeRunner () {
+    this.sn = '9-9-0-6-9-4-7-X-B-7-1'
+  }
+
+  BladeRunner.prototype.getReplicant = function getReplicant () {
+    return this.sn
+  }
+
+  const deckard = new BladeRunner()
+  const spy = fnSpy(deckard.getReplicant, deckard)
+
+  assert.deepEqual(spy.calledCount(), 0, '0 calls 0 counts')
+
+  assert
+    .deepEqual(
+      spy(),
+      '9-9-0-6-9-4-7-X-B-7-1',
+      'should return the fn returning value'
+    )
+
+  assert.deepEqual(spy.calledCount(), 1, '1 calls 1 counts')
+
+  assert
+    .deepEqual(
+      spy.getReturns(),
+      ['9-9-0-6-9-4-7-X-B-7-1'],
+      'should return [ 9-9-0-6-9-4-7-X-B-7-1 ]'
+    )
 
   assert.end()
 })

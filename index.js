@@ -8,18 +8,22 @@ max-len: ["error", 80]
 
 const spy = module.exports = spyFn
 
-function spyFn (fn) {
-  let count = 0
-  let args  = []
+function spyFn (fn, that) {
+  let count   = 0
+  let args    = []
+  let values  = []
 
-  const call = function call (...theArgs) {
+  const call = (...theArgs) => {
     count++
     args.push(theArgs)
-    return fn.apply(null, theArgs)
+    const output = fn.apply(that, theArgs)
+    values.push(output)
+    return output
   }
 
   call.calledWith = () => { return args }
   call.calledCount = () => { return count }
+  call.getReturns = () => { return values }
   call.restore = () => { return fn }
 
   return call
